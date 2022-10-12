@@ -1,0 +1,170 @@
+version: 2
+
+sources:
+  - name: shopify_tables
+    database: "{% if target.type != 'spark'%}{{ var('shopify_database', target.database) }}{% endif %}"
+    schema: "{{ var ('shopify_schema', 'shopify') }}"
+
+    loader: fivetran
+    loaded_at_field: _fivetran_synced
+
+    freshness:
+      warn_after: {count: 72, period: hour}
+      error_after: {count: 96, period: hour}
+    
+    description: Shopify's tables gathered from FIVETRAN, primarily ones that could help build the sales metamodel.
+    tables:
+      - name: order
+        description: Each record represents an identifier in Shopify.
+        identifier: "{%- if target.type == 'snowflake' -%} ORDER {%- else -%} order {%- endif -%}"
+        quoting:
+          identifier: true
+        columns:
+          - name: app_id
+          - name: billing_address_address_1
+          - name: billing_address_address_2
+          - name: billing_address_city
+          - name: billing_address_company
+          - name: billing_address_country
+          - name: billing_address_country_code
+          - name: billing_address_first_name
+          - name: billing_address_id
+          - name: billing_address_last_name
+          - name: billing_address_latitude
+          - name: billing_address_longitude
+          - name: billing_address_name
+          - name: billing_address_phone
+          - name: billing_address_province
+          - name: billing_address_province_code
+          - name: billing_address_zip
+          - name: browser_ip
+          - name: buyer_accepts_marketing
+          - name: cancelled_at
+          - name: cancel_reason
+          - name: cart_token
+          - name: checkout_token
+          - name: client_details_user_agent
+          - name: closed_at
+          - name: confirmed
+          - name: created_at
+          - name: currency
+          - name: current_subtotal_price
+          - name: current_subtotal_price_set
+          - name: current_total_discounts
+          - name: current_total_discounts_set
+          - name: current_total_duties_set
+          - name: current_total_price
+          - name: current_total_price_set
+          - name: current_total_tax
+          - name: current_total_tax_set
+          - name: customer_id
+          - name: customer_locale
+          - name: device_id
+          - name: email
+          - name: financial_status
+          - name: fulfillment_status
+          - name: id
+          - name: landing_site_base_url
+          - name: landing_site_ref
+          - name: location_id
+          - name: name
+          - name: note
+          - name: note_attributes
+          - name: number
+          - name: order_number
+          - name: order_status_url
+          - name: original_total_duties_set
+          - name: payment_gateway_names
+          - name: presentment_currency
+          - name: processed_at
+          - name: processing_method
+          - name: reference
+          - name: referring_site
+          - name: shipping_address_address_1
+          - name: shipping_address_address_2
+          - name: shipping_address_city
+          - name: shipping_address_company
+          - name: shipping_address_country
+          - name: shipping_address_country_code
+          - name: shipping_address_first_name
+          - name: shipping_address_id
+          - name: shipping_address_last_name
+          - name: shipping_address_latitude
+          - name: shipping_address_longitude
+          - name: shipping_address_name
+          - name: shipping_address_phone
+          - name: shipping_address_province
+          - name: shipping_address_province_code
+          - name: shipping_address_zip
+          - name: source_identifier
+          - name: source_name
+          - name: source_url
+          - name: subtotal_price
+          - name: subtotal_price_set
+          - name: taxes_included
+          - name: test
+          - name: token
+          - name: total_discounts
+          - name: total_discounts_set
+          - name: total_line_items_price
+          - name: total_line_items_price_set
+          - name: total_price
+          - name: total_price_set
+          - name: total_price_usd
+          - name: total_shipping_price_set
+          - name: total_tax
+          - name: total_tax_set
+          - name: total_tip_received
+          - name: total_weight
+          - name: updated_at
+          - name: user_id
+          - name: _fivetran_deleted
+          - name: _fivetran_synced
+      - name: order_line
+        description: Gives the items in each order along with other information.
+        columns:
+          - name: _fivetran_synced
+          - name: destination_location_address_1
+          - name: destination_location_address_2
+          - name: destination_location_city
+          - name: destination_location_country_code
+          - name: destination_location_id
+          - name: destination_location_name
+          - name: destination_location_province_code
+          - name: destination_location_zip
+          - name: fulfillable_quantity
+          - name: fulfillment_service
+          - name: fulfillment_status
+          - name: gift_card
+          - name: grams
+          - name: id
+          - name: index
+          - name: name
+          - name: order_id
+          - name: origin_location_address_1
+          - name: origin_location_address_2
+          - name: origin_location_city
+          - name: origin_location_country_code
+          - name: origin_location_id
+          - name: origin_location_name
+          - name: origin_location_province_code
+          - name: origin_location_zip
+          - name: pre_tax_price
+          - name: pre_tax_price_set
+          - name: price
+          - name: price_set
+          - name: product_exists
+          - name: product_id
+          - name: properties
+          - name: quantity
+          - name: requires_shipping
+          - name: sku
+          - name: tax_code
+          - name: taxable
+          - name: title
+          - name: total_discount
+          - name: total_discount_set
+          - name: variant_id
+          - name: variant_inventory_management
+          - name: variant_title
+          - name: vendor
