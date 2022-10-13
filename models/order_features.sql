@@ -6,15 +6,18 @@ basket_size as ( select * from {{ ref('stg_shopify__order_line_basket') }} ),
 
 order_features as (
     select
+        first_order_joined.order_id,
+        first_order_joined.customer_id,
         orders.subtotal_price,
-        case when orders.financial_status = 'paid' then 1 else 0 end as financial_status,
-        case when orders.fulfillment_status = 'fulfilled' then 1 else 0 end as fulfillment_status,
-        case when nullif(orders.referring_site, '') is not null then 1 else 0 end as referred,
+        orders.financial_status,
+        orders.fulfillment_status,
+        case when nullif(orders.referring_site, '') is not null then True else False end as referred,
         orders.total_discounts,
         orders.total_tip_received,
         orders.total_weight,
         basket_size.basket_size,
-        first_order_joined.repeat_customer
+        first_order_joined.datetime,
+        case when first_order_joined.repeat_customer = 0 then False else True end as repeat_customer
     
     from first_order_joined
     left join orders 
